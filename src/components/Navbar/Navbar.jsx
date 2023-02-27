@@ -22,8 +22,8 @@ const Navbar = () => {
                 {user && <>
                     <li><Link href="#" className='hover:bg-primary py-2 px-4 rounded-full hover:text-bgColor transition-all'>Messages</Link></li>
                     <li><Link href="#" className='hover:bg-primary py-2 px-4 rounded-full hover:text-bgColor transition-all'>About</Link></li>
-                    <li><Link href="#" className='hover:bg-primary py-2 px-4 rounded-full hover:text-bgColor transition-all'>Profile</Link></li>
                     <li><Link href="#" className='hover:bg-primary py-2 px-4 rounded-full hover:text-bgColor transition-all' onClick={handleLogout}>Logout</Link></li>
+                    <li><Link href="#" className='hover:bg-primary py-2 px-4 rounded-full hover:text-bgColor transition-all bg-primary' title={'Signed in as ' + user.email}>{user.username}</Link></li>
                 </>}
                 {
                     !user && <>
