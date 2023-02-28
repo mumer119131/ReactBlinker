@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { sendMessage } from '../../Shared/Routes'
 import { AiOutlineSend } from 'react-icons/ai'
 import Message from '../Message/Message'
+import { motion } from 'framer-motion'
+
 const MessageSection = ({ selectedThread, fetchUserThreads }) => {
 
     const [message, setMessage] = useState('')
@@ -10,13 +12,12 @@ const MessageSection = ({ selectedThread, fetchUserThreads }) => {
     const sendUserMessage = async (e) => {
         e.preventDefault()
         const [response, status] = await sendMessage(message, selectedThread.thread_id)
-        fetchUserThreads()
+        const threads = await fetchUserThreads()
         setMessage('')
-        console.log(response, status)
     }
     return (
         <div className='bg-bgColor w-[80%] p-4 rounded-tr-lg rounded-br-lg relative'>
-            <div className='text-white h-[calc(100%-4rem)] flex flex-col justify-end items-end overflow-auto'>
+            <div className='text-white h-[calc(100%-4rem)] flex flex-col justify-end items-end overflow-y-scroll overflow-x-hidden custom-scrollbar'>
                 {
                     selectedThread != null && selectedThread.messages.length > 0 ? selectedThread.messages.map((message) => {
                         return <Message key={message.id} message={message} />

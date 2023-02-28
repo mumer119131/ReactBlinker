@@ -3,11 +3,13 @@ import { fetchThreads, sendMessage } from '../Shared/Routes'
 import { MdGroups } from 'react-icons/md'
 
 import MessageSection from './MessageSection/MessageSection'
+import CreateThreadSection from './CreateThreadSection/CreateThreadSection'
 
 
 const Messages = () => {
     const [threads, setThreads] = useState([])
     const [selectedThread, setSelectedThread] = useState(null)
+    const [selectedScreen, setSelectedScreen] = useState('messages')
 
     const fetchUserThreads = async () => {
         const [userThreads, status] = await fetchThreads()
@@ -15,11 +17,13 @@ const Messages = () => {
         if (!selectedThread) {
             setSelectedThread(userThreads[0])
         } else {
-            setSelectedThread(selectedThread)
+            setSelectedThread(userThreads.find(thread => thread.thread_id === selectedThread.thread_id))
         }
+        return userThreads
     }
 
     const handleThreadChange = (index) => {
+        setSelectedScreen('messages')
         console.log(threads[index])
         setSelectedThread(threads[index])
     }
@@ -27,16 +31,10 @@ const Messages = () => {
         fetchUserThreads()
     }, [])
 
-    const sendUserMessage = async (e) => {
-        e.preventDefault()
-        const [response, status] = await sendMessage(message, selectedThread.thread_id)
-        fetchUserThreads()
-        setMessage('')
-        console.log(response, status)
-    }
+
     return (
         <section>
-            <div className='flex glass_morphism min-w-[744px] w-full section_screem_height text-bgColor rounded-lg'>
+            <div className='flex glass_morphism min-w-[744px] h-[calc(100vh-10rem)] min-h-[458px] w-full section_screen_height text-bgColor rounded-lg'>
                 <div className='bg-primary  w-[20%] py-4 px-2 rounded-tl-lg rounded-bl-lg' >
                     <h2 className='font-bold xs:text-sm text-2xl flex items-center justify-center gap-2'><MdGroups /> Threads</h2>
                     <ul>
@@ -50,11 +48,15 @@ const Messages = () => {
                                 )
                             }) : <p className='mt-4 text-center'>No threads</p>
                         }
-                        <li className='bg-bgColor w-12 text-white h-12 text-xl flex justify-center items-center rounded-[50%] relative left-[50%] translate-x-[-50%] mt-2 cursor-pointer'>+</li>
+                        <li className='bg-bgColor w-12 text-white h-12 text-xl flex justify-center items-center rounded-[50%] relative left-[50%] translate-x-[-50%] mt-2 cursor-pointer transition-all hover:text-3xl' onClick={() => setSelectedScreen('create_thread')}>+</li>
                     </ul>
                 </div>
-                <MessageSection selectedThread={selectedThread} fetchUserThreads={fetchUserThreads} />
-
+                {
+                    selectedScreen === 'messages' && <MessageSection selectedThread={selectedThread} fetchUserThreads={fetchUserThreads} />
+                }
+                {
+                    selectedScreen === 'create_thread' && <CreateThreadSection />
+                }
             </div>
         </section>
     )
