@@ -45,3 +45,23 @@ export const sendMessage = async (message, threadId) => {
         return error
     }
 }
+
+
+// create thread
+export const createThread = async (title) => {
+    try {
+        const formData = new FormData()
+        formData.append("title", title)
+        const response = await axios.post(`${baseUrl}create-thread`, formData, {
+            headers: {
+                'x-access-token': token
+            }
+        })
+        return [response.data, response.status]
+    } catch (error) {
+        if (error.response) {
+            return [error.response.data.message, 404]
+        }
+        return error
+    }
+}
